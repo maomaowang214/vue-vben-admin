@@ -15,11 +15,16 @@ import { initAppConfigStore } from '@/logics/initAppConfig';
 import { router, setupRouter } from '@/router';
 import { setupRouterGuard } from '@/router/guard';
 import { setupStore } from '@/store';
+import uibuilder from 'node-red-contrib-uibuilder/front-end/uibuilder.esm.min.js';
 
 import App from './App.vue';
 
 async function bootstrap() {
   const app = createApp(App);
+
+  // 设置cesium和babylon全局对象
+  app.provide('$root', {});
+  app.provide('$uibuilder', uibuilder);
 
   // Configure store
   // 配置 store

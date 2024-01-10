@@ -10,7 +10,8 @@ export function createFakeUserList() {
       avatar: '',
       desc: 'manager',
       password: '123456',
-      token: 'fakeToken1',
+      token:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiJhZG1pbiIsInJvbGVJRCI6InJvb3QifQ.zs6i2joka8Qj5BUJab5G1cBm9-JoEs98o03tGv6LEzM',
       homePath: '/dashboard/analysis',
       roles: [
         {

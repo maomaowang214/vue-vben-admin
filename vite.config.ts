@@ -17,7 +17,7 @@ export default defineApplicationConfig({
     server: {
       proxy: {
         '/basic-api': {
-          target: 'http://localhost:3000',
+          target: 'http://localhost:1880',
           changeOrigin: true,
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/basic-api`), ''),
@@ -30,6 +30,18 @@ export default defineApplicationConfig({
           ws: true,
           rewrite: (path) => path.replace(new RegExp(`^/upload`), ''),
         },
+        '/uibuilder': {
+          target: 'http://127.0.0.1:1880/uibuilder',
+          changeOrigin: true,
+          ws: true,
+          rewrite: (path) => path.replace(new RegExp(`^/uibuilder`), ''),
+        },
+        // '/nodered': {
+        //   target: 'http://127.0.0.1:1880/',
+        //   changeOrigin: true,
+        //   ws: true,
+        //   rewrite: (path) => path.replace(new RegExp(`^/nodered`), ''),
+        // },
       },
     },
   },
