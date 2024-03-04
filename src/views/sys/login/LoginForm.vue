@@ -82,7 +82,7 @@
   </Form>
 </template>
 <script lang="ts" setup>
-  import { reactive, ref, unref, computed } from 'vue';
+  import { reactive, ref, unref, computed, onMounted } from 'vue';
 
   import { Checkbox, Form, Input, Row, Col, Button, Divider } from 'ant-design-vue';
   import {
@@ -129,6 +129,10 @@
 
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN);
 
+  onMounted(() => {
+    // 自动登录
+    // handleLogin();
+  });
   async function handleLogin() {
     const data = await validForm();
     if (!data) return;

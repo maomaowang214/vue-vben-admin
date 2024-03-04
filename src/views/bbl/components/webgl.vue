@@ -28,6 +28,7 @@
     });
   });
 
+  // webGPU设置
   async function createEngine() {
     const webGPUSupported = await BABYLON.WebGPUEngine.IsSupportedAsync;
     if (webGPUSupported) {
@@ -87,6 +88,7 @@
     const hemiLight = new BABYLON.HemisphericLight('半球光', new BABYLON.Vector3(0, 10, 0), scene1);
     hemiLight.intensity = 1;
 
+    // 鼠标选中模型事件
     scene1.onPointerDown = function castRay() {
       const hit: any = scene1.pick(scene1.pointerX, scene1.pointerY);
       if (hit.pickedMesh && hit.pickedMesh.name === 'JE01_M01_A03') {
@@ -101,6 +103,7 @@
     return scene1;
   };
 
+  /** 主函数 */
   const main = async () => {
     scene = await createScene();
     $root.scene = scene; // 赋值给全局变量
