@@ -43,6 +43,9 @@ export default defineApplicationConfig({
         //   rewrite: (path) => path.replace(new RegExp(`^/nodered`), ''),
         // },
       },
+      warmup: {
+        clientFiles: ['./index.html', './src/{views,components}/*'],
+      },
     },
   },
 });

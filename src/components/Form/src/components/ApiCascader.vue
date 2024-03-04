@@ -20,7 +20,7 @@
 </template>
 <script lang="ts" setup>
   import { type Recordable } from '@vben/types';
-  import { PropType, ref, unref, watch, watchEffect } from 'vue';
+  import { PropType, ref, unref, watch } from 'vue';
   import { Cascader } from 'ant-design-vue';
   import type { CascaderProps } from 'ant-design-vue';
   import { propTypes } from '@/utils/propTypes';
@@ -31,11 +31,12 @@
   import { useI18n } from '@/hooks/web/useI18n';
 
   interface Option {
-    value: string;
-    label: string;
+    value?: string;
+    label?: string;
     loading?: boolean;
     isLeaf?: boolean;
     children?: Option[];
+    [key: string]: any;
   }
 
   defineOptions({ name: 'ApiCascader' });
@@ -45,7 +46,7 @@
       type: Array,
     },
     api: {
-      type: Function as PropType<(arg?: Recordable<any>) => Promise<Option[]>>,
+      type: Function as PropType<(arg?: any) => Promise<Option[]>>,
       default: null,
     },
     numberToString: propTypes.bool,
@@ -158,9 +159,15 @@
     }
   };
 
-  watchEffect(() => {
-    props.immediate && initialFetch();
-  });
+  watch(
+    () => props.immediate,
+    () => {
+      props.immediate && initialFetch();
+    },
+    {
+      immediate: true,
+    },
+  );
 
   watch(
     () => props.initFetchParams,

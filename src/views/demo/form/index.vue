@@ -58,7 +58,7 @@
 <script lang="ts" setup>
   import { type Recordable } from '@vben/types';
   import { computed, unref, ref } from 'vue';
-  import { BasicForm, FormSchema, ApiSelect } from '@/components/Form';
+  import { BasicForm, ApiSelect, FormSchema } from '@/components/Form';
   import { CollapseContainer } from '@/components/Container';
   import { useMessage } from '@/hooks/web/useMessage';
   import { PageWrapper } from '@/components/Page';
@@ -152,7 +152,9 @@
     {
       field: 'field1',
       component: 'Input',
-      label: '字段1',
+      label: ({ model }) => {
+        return `字段1${model.field3 ? model.field3 : ''}`;
+      },
 
       colProps: {
         span: 8,
@@ -308,8 +310,8 @@
             value: '2',
           },
         ],
-        onChange: (e, v) => {
-          console.log('RadioButtonGroup====>:', e, v);
+        onChange: (e) => {
+          console.log(e);
         },
       },
     },
@@ -362,7 +364,7 @@
       component: 'BasicTitle',
       label: '标题区分',
       componentProps: {
-        line: true,
+        // line: true,
         span: true,
       },
       colProps: {
@@ -441,7 +443,7 @@
       componentProps: {
         api: areaRecord,
         apiParamKey: 'parentCode',
-        dataField: 'data',
+        // dataField: 'data',
         labelField: 'name',
         valueField: 'code',
         initFetchParams: {
@@ -457,7 +459,7 @@
     },
     {
       field: 'field31',
-      component: 'Input',
+      // component: 'Input',
       label: '下拉本地搜索',
       helpMessage: ['ApiSelect组件', '远程数据源本地搜索', '只发起一次请求获取所有选项'],
       required: true,
@@ -466,10 +468,13 @@
         span: 8,
       },
       defaultValue: '0',
+      componentProps: {
+        onOptionsChange() {},
+      },
     },
     {
       field: 'field32',
-      component: 'Input',
+      // component: 'Input',
       label: '下拉远程搜索',
       helpMessage: ['ApiSelect组件', '将关键词发送到接口进行远程搜索'],
       required: true,
@@ -578,8 +583,8 @@
         // use id as value
         valueField: 'id',
         isBtn: true,
-        onChange: (e, v) => {
-          console.log('ApiRadioGroup====>:', e, v);
+        onChange: (e) => {
+          console.log('ApiRadioGroup====>:', e);
         },
       },
       colProps: {
@@ -684,7 +689,7 @@
     },
     {
       field: 'selectA',
-      component: 'Select',
+      // component: 'Select',
       label: '互斥SelectA',
       slot: 'selectA',
       defaultValue: [],
@@ -694,7 +699,7 @@
     },
     {
       field: 'selectB',
-      component: 'Select',
+      // component: 'Select',
       label: '互斥SelectB',
       slot: 'selectB',
       defaultValue: [],

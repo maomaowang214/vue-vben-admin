@@ -67,6 +67,12 @@
         formProps: Ref<FormProps>;
       };
 
+      // 组件 CropperAvatar 的 size 属性类型为 number
+      // 此处补充一个兼容
+      if (schema.value.component === 'CropperAvatar' && typeof formProps.value.size === 'string') {
+        formProps.value.size = undefined;
+      }
+
       const itemLabelWidthProp = useItemLabelWidth(schema, formProps);
 
       const getValues = computed(() => {
@@ -159,7 +165,6 @@
         isShow = isShow && itemIsAdvanced;
         return { isShow, isIfShow };
       }
-
       function handleRules(): ValidationRule[] {
         const {
           rules: defRules = [],
@@ -169,7 +174,6 @@
           dynamicRules,
           required,
         } = props.schema;
-
         if (isFunction(dynamicRules)) {
           return dynamicRules(unref(getValues)) as ValidationRule[];
         }
@@ -180,7 +184,7 @@
         const joinLabel = Reflect.has(props.schema, 'rulesMessageJoinLabel')
           ? rulesMessageJoinLabel
           : globalRulesMessageJoinLabel;
-        const assertLabel = joinLabel ? label : '';
+        const assertLabel = joinLabel ? (isFunction(label) ? '' : label) : '';
         const defaultMsg = component
           ? createPlaceholderMessage(component) + assertLabel
           : assertLabel;
@@ -210,7 +214,6 @@
           }
           return Promise.resolve();
         }
-
         const getRequired = isFunction(required) ? required(unref(getValues)) : required;
 
         /*
@@ -220,7 +223,10 @@
          */
         if (getRequired) {
           if (!rules || rules.length === 0) {
-            rules = [{ required: getRequired, validator }];
+            const trigger = NO_AUTO_LINK_COMPONENTS.includes(component || 'Input')
+              ? 'blur'
+              : 'change';
+            rules = [{ required: getRequired, validator, trigger }];
           } else {
             const requiredIndex: number = rules.findIndex((rule) => Reflect.has(rule, 'required'));
 
@@ -280,12 +286,14 @@
         const on = {
           [eventKey]: (...args: Nullable<Recordable<any>>[]) => {
             const [e] = args;
-            if (propsData[eventKey]) {
-              propsData[eventKey](...args);
-            }
+
             const target = e ? e.target : null;
             const value = target ? (isCheck ? target.checked : target.value) : e;
             props.setFormModel(field, value, props.schema);
+
+            if (propsData[eventKey]) {
+              propsData[eventKey](...args);
+            }
           },
         };
         const Comp = componentMap.get(component) as ReturnType<typeof defineComponent>;
@@ -336,12 +344,13 @@
 
       function renderLabelHelpMessage() {
         const { label, helpMessage, helpComponentProps, subLabel } = props.schema;
+        const getLabel = isFunction(label) ? label(unref(getValues)) : label;
         const renderLabel = subLabel ? (
           <span>
-            {label} <span class="text-secondary">{subLabel}</span>
+            {getLabel} <span class="text-secondary">{subLabel}</span>
           </span>
         ) : (
-          label
+          getLabel
         );
         const getHelpMessage = isFunction(helpMessage)
           ? helpMessage(unref(getValues))
@@ -422,7 +431,7 @@
 
       return () => {
         const { colProps = {}, colSlot, renderColContent, component, slot } = props.schema;
-        if (!component || (!componentMap.has(component) && !slot)) {
+        if (!((component && componentMap.has(component)) || slot)) {
           return null;
         }
 
